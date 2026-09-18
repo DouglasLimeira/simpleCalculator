@@ -14,10 +14,10 @@ test("aceita sinais unários", () => {
   assert.equal(calculate("-2 * -(3 + 1)"), 8);
 });
 
-test("rejeita caracteres fora da linguagem", () => {
-  assert.throws(() => calculate("2 + alerta"), /Caractere inválido/);
+test("rejects unsupported characters", () => {
+  assert.throws(() => calculate("2 + alerta"), /Invalid character/);
 });
 
-test("rejeita divisão por zero", () => {
-  assert.throws(() => calculate("10 / 0"), /número finito/);
+test("rejects division by zero", () => {
+  assert.throws(() => calculate("10 / 0"), /finite number/);
 });

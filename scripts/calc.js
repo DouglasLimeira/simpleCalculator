@@ -14,9 +14,9 @@ const OPERATORS = {
 
 export function calculate(expression) {
   const normalizedExpression = expression.trim().replaceAll(",", ".");
-  if (!normalizedExpression) throw new Error("Informe uma equação.");
+  if (!normalizedExpression) throw new Error("Please provide an equation.");
   if (normalizedExpression.length > MAX_EXPRESSION_LENGTH) {
-    throw new Error("A equação é muito longa.");
+    throw new Error("The equation is too long.");
   }
 
   const tokens = tokenize(normalizedExpression);
@@ -30,15 +30,15 @@ export function calculate(expression) {
     }
 
     const operator = OPERATORS[token];
-    if (values.length < operator.arity) throw new Error("Equação inválida.");
+    if (values.length < operator.arity) throw new Error("Invalid equation.");
     const right = values.pop();
     const left = operator.arity === 2 ? values.pop() : undefined;
     const value = operator.arity === 1 ? operator.apply(right) : operator.apply(left, right);
-    if (!Number.isFinite(value)) throw new Error("O resultado não é um número finito.");
+    if (!Number.isFinite(value)) throw new Error("The result is not a finite number.");
     values.push(value);
   }
 
-  if (values.length !== 1) throw new Error("Equação inválida.");
+  if (values.length !== 1) throw new Error("Invalid equation.");
   return values[0];
 }
 
@@ -66,7 +66,7 @@ function tokenize(expression) {
       continue;
     }
 
-    throw new Error(`Caractere inválido: ${character}`);
+    throw new Error(`Invalid character: ${character}`);
   }
 
   return tokens;
@@ -92,14 +92,14 @@ function toPostfix(tokens) {
 
     if (token === ")") {
       while (operators.length && operators.at(-1) !== "(") output.push(operators.pop());
-      if (operators.pop() !== "(") throw new Error("Parênteses desbalanceados.");
+      if (operators.pop() !== "(") throw new Error("Unbalanced parentheses.");
       expectsValue = false;
       continue;
     }
 
     const operatorToken = expectsValue && (token === "+" || token === "-") ? `u${token}` : token;
     const operator = OPERATORS[operatorToken];
-    if (!operator || (expectsValue && operator.arity === 2)) throw new Error("Equação inválida.");
+    if (!operator || (expectsValue && operator.arity === 2)) throw new Error("Invalid equation.");
 
     while (operators.length && operators.at(-1) !== "(") {
       const top = OPERATORS[operators.at(-1)];
@@ -114,10 +114,10 @@ function toPostfix(tokens) {
     expectsValue = operator.arity !== 1;
   }
 
-  if (expectsValue) throw new Error("Equação inválida.");
+  if (expectsValue) throw new Error("Invalid equation.");
   while (operators.length) {
     const operator = operators.pop();
-    if (operator === "(") throw new Error("Parênteses desbalanceados.");
+    if (operator === "(") throw new Error("Unbalanced parentheses.");
     output.push(operator);
   }
   return output;
@@ -146,11 +146,11 @@ function sendResult(expression) {
   try {
     const result = calculate(expression);
     ChatMessage.create({
-      content: `<strong>Resultado:</strong> ${escapeHtml(expression)} = <strong>${formatResult(result)}</strong>`
+      content: `<strong>Result:</strong> ${escapeHtml(expression)} = <strong>${formatResult(result)}</strong>`
     });
   } catch (error) {
     ChatMessage.create({
-      content: `<strong>Calculadora:</strong> ${escapeHtml(error.message)}`
+      content: `<strong>Calculator:</strong> ${escapeHtml(error.message)}`
     });
   }
 }
