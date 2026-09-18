@@ -1,0 +1,19 @@
+{
+  "id": "simplecalculator",
+  "title": "Simple Calculator",
+  "description": "Calculates mathematical expressions sent via the /calc command in chat.",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "Douglas Limeira"
+    }
+  ],
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14",
+    "maximum": "14"
+  },
+  "esmodules": [
+    "scripts/calc.js"
+  ]
+}
